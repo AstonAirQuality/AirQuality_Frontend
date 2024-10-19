@@ -1,0 +1,102 @@
+@tailwind components;
+
+@layer components{
+
+
+    .map-container{
+        @apply flex flex-col
+        bg-gray-200 dark:bg-gray-600
+        m-0
+        h-full
+        overflow-hidden;
+    }
+
+    .map-overlay{
+        @apply 
+        absolute
+        bg-gray-700 dark:bg-gray-400
+        text-gray-200 dark:text-gray-900
+        w-[200px]
+        mt-4 mx-4
+        p-3
+        shadow-lg;
+    }
+
+    .map-overlay-inner{
+        @apply shadow-sm mb-3;
+    }
+
+    /* slider */
+    .map-slider-container{
+        @apply flex flex-col
+        items-start justify-start
+        bg-gray-700 dark:bg-gray-400
+        text-gray-200 dark:text-gray-900 text-base
+        w-full
+        overflow-hidden;
+    }
+
+    .map-slider{
+        @apply 
+        bg-gray-700 dark:bg-gray-400
+        w-full
+        overflow-hidden;
+    }
+
+    /* checkbox */
+    .map-checkbox-container{
+        @apply block
+        items-center justify-start
+        bg-gray-700 dark:bg-gray-400
+        max-h-[20vh]
+        overflow-x-hidden
+        overflow-y-auto;
+    }
+    .map-checkbox-item{
+        @apply flex flex-row items-center justify-start
+        bg-gray-600 dark:bg-gray-300
+        text-gray-200 dark:text-gray-900
+        w-full
+        text-base
+        overflow-hidden;
+    }
+
+    .map-checkbox{
+        @apply 
+       w-4 h-4 mr-1;
+    }
+
+    /* map form */
+    .map-form-group{
+        @apply flex flex-col
+        items-start justify-start
+        bg-gray-700 dark:bg-gray-400
+        text-gray-200 dark:text-gray-900
+        w-full
+        overflow-hidden;
+    }
+
+    .map-form-label{
+        @apply bg-gray-700 dark:bg-gray-400
+        text-gray-200 dark:text-gray-900
+        text-sm
+        w-full
+        overflow-hidden;
+    }
+
+    .map-form-input{
+        @apply bg-gray-700 dark:bg-gray-300
+        text-gray-200 dark:text-gray-900
+        text-sm
+        w-full
+        overflow-hidden;
+    }
+
+    .map-form-select{
+        @apply bg-gray-700 dark:bg-gray-300
+        text-gray-200 dark:text-gray-900
+        text-sm
+        w-full
+        overflow-hidden;
+    }
+}

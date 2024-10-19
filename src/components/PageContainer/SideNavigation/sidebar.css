@@ -1,0 +1,10 @@
+@tailwind components;
+
+@layer components{
+
+    .sidenav {
+        @apply  bg-white dark:bg-gray-800
+        fixed inset-y-0 left-0 h-screen min-w-fit p-4 overflow-y-auto
+      }
+      
+}

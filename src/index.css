@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @import "../../../../../index.css"; */
+@import "./components/PageContainer/Pages/SensorManagement/CRUD/form.css";
+@import "./components/PageContainer/Pages/SensorManagement/table.css";
+@import "./components/PageContainer/SideNavigation/sidebar.css";
+@import "./components/PageContainer/TopNavigation/navbar.css";
+@import "./components/PageContainer/Pages/Authentication/login.css";
+@import "./components/PageContainer/Pages/SensorMapping/maps.css";
+@import "./components/PageContainer/Pages/UserManagement/manageusers.css";
+@import "./components/PageContainer/Pages/Logs/logs.css";
+@import "./components/PageContainer/Pages/Home/home.css";
+
+@layer components{
+    
+    /* .navbar-icon:first {
+      @apply ml-auto mr-4;
+    } */
+
+    /* page content*/
+    .page-container {
+      @apply flex flex-col 
+      bg-gray-300 dark:bg-gray-700
+      m-0
+      w-full
+      overflow-y-visible
+     ;
+    }
+
+    .page{
+      @apply flex flex-col 
+      bg-gradient-to-r from-gray-50 to-gray-400
+      dark:from-gray-900 dark:to-gray-700
+      m-0 min-h-screen
+      overflow-x-hidden
+    }
+
+
+    .page-text{
+      @apply text-gray-600 dark:text-gray-200
+      opacity-100 font-medium leading-[30px]
+    }
+
+    .page-text-fade{
+      @apply opacity-0 transition-all duration-700 selection:ease-linear;
+    }
+
+    .page-title{
+      @apply font-black md:text-[65px] sm:text-[55px] text-[35px] text-gray-600 dark:text-gray-200
+      pb-8;
+    }
+
+    .page-section-title{
+      @apply text-gray-700 dark:text-gray-500 font-medium sm:text-[16px] text-[12px] uppercase tracking-wider
+    }
+
+}
+
+/* scrollbar */
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  @apply bg-gray-900 dark:bg-gray-900
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-500 dark:bg-gray-400;
+}

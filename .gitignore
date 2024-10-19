@@ -1,0 +1,31 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+testReport.json
+cypress/results/*
+cypress/videos/*
+mochawesome-report/*
+
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+src/components/PageContainer/Pages/SensorMapping/data/skateboardparks.json
+
+# ignore .env files
+.env.local
+.env.production

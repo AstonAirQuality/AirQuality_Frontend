@@ -1,0 +1,17 @@
+@tailwind components;
+
+@layer components{
+
+
+    .home-map-container{
+        @apply flex flex-col
+        m-0
+        mx-6
+        p-2
+        h-[70%]
+        overflow-hidden;
+    }
+
+}
+
+  

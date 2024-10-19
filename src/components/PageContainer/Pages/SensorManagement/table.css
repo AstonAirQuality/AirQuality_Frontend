@@ -1,0 +1,64 @@
+@tailwind components;
+
+@layer components{
+
+    .table-caption-text{
+        @apply mt-3 text-base font-medium text-gray-500 dark:text-gray-400;
+    }
+
+    .table-refresh-button{
+        @apply mt-3 w-fit h-fit bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-4 border border-sky-700 rounded
+        flex items-center justify-between p-2 text-base 
+    }
+
+    .table-create-button{
+        @apply bg-green-600 hover:bg-green-700 border-green-800 text-white font-bold py-2 px-4 mb-2 w-full border rounded text-sm;
+    }
+
+    .table-actions-dropdown{
+        @apply bg-gray-500 text-white hover:bg-gray-400 dark:hover:bg-gray-700 rounded-lg
+        w-full flex items-center justify-between p-2 text-base font-normal;
+    }
+
+    .table-edit-button{
+        @apply w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 border border-blue-700 rounded
+        flex items-center justify-center p-2 text-base 
+    }
+
+    .table-delete-button{
+        @apply w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 border border-red-700 rounded
+        flex items-center justify-center p-2 text-base
+    }
+
+    .table-view-button{
+        @apply w-full bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-4 border border-yellow-800 rounded
+        flex items-center justify-center p-2 text-base
+    }
+
+    .table-view-map-button{
+        @apply w-fit bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 border border-indigo-800 rounded
+        flex items-center justify-center p-2 text-base
+    }
+
+    .table-filter-input{
+        @apply placeholder-gray-500 text-gray-800 bg-gray-400 focus:bg-white
+        dark:bg-gray-600  dark:focus:bg-gray-900 dark:text-gray-400
+        py-2 px-6 text-sm rounded-md focus:outline-none 
+    }
+
+    .table-filter-close-button{
+        @apply  text-black  dark:text-white hover:bg-gray-100 dark:hover:bg-gray-500 
+        p-2.5 rounded-md 
+        absolute top-0 right-0;
+    }
+    
+    .table-pagination-button{
+        @apply bg-gray-900 text-white hover:bg-gray-400 dark:hover:bg-gray-700 rounded-lg
+        text-lg w-fit flex items-center justify-between m-2 p-2 font-semibold;
+    }
+
+
+    .static-map{
+        @apply w-min h-min rounded-lg shadow-lg relative;
+    }
+}
