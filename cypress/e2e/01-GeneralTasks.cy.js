@@ -17,7 +17,7 @@ describe('Sensor Platform Types', function () {
    it('filtering sensor types by name', function () {
       cy.visit('http://localhost:3000/sensor-platform-types')
 
-      cy.intercept("GET", "http://localhost:8000/sensor-type").as("get_data")
+      cy.intercept("GET", "http://localhost:8000/sensor-platform-type").as("get_data")
 
       cy.wait("@get_data").its('response.statusCode').should('equal', 200)
 
