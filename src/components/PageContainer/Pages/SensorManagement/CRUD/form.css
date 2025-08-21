@@ -14,8 +14,8 @@
 
     .crud-container {
         @apply fixed inset-y-0 left-0 z-40 h-screen w-1/2 p-4 overflow-y-auto bg-white dark:bg-gray-800
-      }
-
+    }
+    
     .form-container {
         @apply shadow-xl rounded px-8 pt-6 pb-8 mb-4;
     }
@@ -27,6 +27,10 @@
     .form-input {
         @apply text-gray-600 bg-gray-400 dark:text-gray-400 dark:bg-gray-600
         w-full py-2 px-3 rounded-sm;
+    }
+
+    .form-container-error{
+        @apply fixed top-4 left-[55%] transform translate-x-[1/5] z-50 w-2/5;
     }
 
     .form-input-error {

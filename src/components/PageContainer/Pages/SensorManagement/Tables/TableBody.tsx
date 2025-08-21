@@ -37,6 +37,27 @@ interface TableActionsDropdownItemsProps {
     btn: TableActionsBtn;
 }
 
+// Recursive tree renderer
+const ObjectTree: React.FC<{ data: any; level?: number }> = ({ data, level = 0 }) => {
+    if (typeof data !== "object" || data === null) {
+        return <span>{String(data)}</span>;
+    }
+    return (
+        <ul style={{ marginLeft: level * 16 }}>
+            {Object.entries(data).map(([key, val]) => (
+                <li key={key}>
+                    <strong>{key}:</strong>{" "}
+                    {typeof val === "object" && val !== null ? (
+                        <ObjectTree data={val} level={level + 1} />
+                    ) : (
+                        <span>{String(val)}</span>
+                    )}
+                </li>
+            ))}
+        </ul>
+    );
+};
+
 const TableBody: React.FC<TableBodyProps> = ({
     props,
     tableType,
@@ -97,6 +118,7 @@ const TableBody: React.FC<TableBodyProps> = ({
     );
 };
 
+// Describes how to render each row based on different header and value types like coordinates, booleans, objects, etc.
 const TableRow: React.FC<TableRowProps> = ({ header, value }) => {
     if (header === "stationary_box") {
         return (
@@ -122,28 +144,11 @@ const TableRow: React.FC<TableRowProps> = ({ header, value }) => {
         );
     } else if (header === "username" && typeof value === "string") {
         displayValue = value.split(" ")[0];
-    } else if (header === "properties" && value && typeof value === "object") {
+    } else if (typeof value === "object") {
         displayValue = (
-            <table className="table-auto w-min h-fit">
-                <thead>
-                    <tr>
-                        <th className="py-3 px-6">Observable Properties</th>
-                        <th className="py-3 px-6">Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Object.entries(value).map(([key, val]) => (
-                        <tr key={key}>
-                            <td id="embedded_header" className="py-3 px-6">
-                                {key}
-                            </td>
-                            <td id="embedded_value" className="py-3 px-6">
-                                {String(val)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="w-full">
+                <ObjectTree data={value} />
+            </div>
         );
     } else if (header === "time_updated" && value !== null) {
         displayValue = new Date(value).toLocaleString();

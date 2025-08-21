@@ -6,43 +6,51 @@ import TableBody from "./TableBody.tsx";
 import TableHeaders from "./TableHeaders.tsx";
 import { User } from "../../../../../types/User.ts";
 
-type SensorPlatformTypeProps = {
+
+type SensorPlatformConfigProps = {
     tableRefresh: boolean;
     setTableRefresh: (value: boolean) => void;
     setMenuOpen: (value: string) => void;
     setRowData: (data: any) => void;
 };
+//TODO remove user check as only admins should be able to access this page
 
-const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
+const SensorPlatformConfig: React.FC<SensorPlatformConfigProps> = ({
     tableRefresh,
     setTableRefresh,
     setMenuOpen,
     setRowData: setParentRowData,
 }) => {
-    const [rowData, setRowData] = useState<any[]>([]);
+      const [rowData, setRowData] = useState<any[]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = UserAuth() || {};
 
     const disableActions = user?.role === "user" || user === null;
-    const tableType = "sensor-platform-type";
+    const tableType = "sensor-platform-config";
     const addBtnMenuPath = "Create-" + tableType;
-    const dataURL = process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
-    const tableName = "SensorPlatformType";
-    const tableHeader =  (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Sensor Platform Types"
+    const dataURL =
+        process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
+    const tableName = "Sensor Platform Configuration";
+    const tableHeader = (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Sensor Platform Configuration"
     const tableCaption =
         user?.role === "admin" || user?.role === "sensortech"
-        ? "Browse through a list of sensor platform types and their associated information.\n Admin users and sensor technicians can create, edit and delete sensor types here."
-        : "Browse through a list of sensor platform types and their associated information.";
+            ? "Browse through a list of Sensor Platform Configurations and their associated information.\n Admin users and sensor technicians can create, edit and delete Sensor Platform Configurations here."
+            : "Browse through a list of Sensor Platform Configurations and their associated information.";
 
     // Fetch data from API and cache it
     const handleRefresh = async (refreshState: boolean, url: string) => {
         setLoading(true);
         await RefreshData(refreshState, url, tableType).then((data) => {
-            data.sort((a: any, b: any) => (a.id > b.id ? 1 : -1));
-            setHeaders(Object.keys(data[0] || {}));
-            setRowData(data);
-            setTableRefresh(false);
+            if (data === null || data.length === 0) {
+                throw new Error("No data found");
+            }
+            else{
+                data.sort((a: any, b: any) => (a.id > b.id ? 1 : -1));
+                setHeaders(Object.keys(data[0] || {}));
+                setRowData(data);
+                setTableRefresh(false);
+            }
         }).catch((error) => {
             console.error("Error fetching data:", error);
             setRowData([]);
@@ -51,6 +59,7 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
             setLoading(false);
         });
     };
+
     useEffect(() => {
         handleRefresh(tableRefresh, dataURL);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,5 +132,4 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
         </div>
     );
 };
-
-export default SensorPlatformTypeTable;
+export default SensorPlatformConfig;

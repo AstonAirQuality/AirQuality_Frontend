@@ -5,24 +5,29 @@ export interface DropdownItem {
 }
 
 export interface NavLink {
-    title: string;
+    dropdown_title: string;
     dropdown_items: DropdownItem[];
 }
 
 export const NavLinks: Record<string, NavLink> = {
-    "manage-sensors": {
-        title: 'Manage Sensor Platforms',
+    "technician-role": {
+        dropdown_title: 'Manage Sensor Platforms',
         dropdown_items: [
+            { routeName: "sensor platform type", url: "sensor-platform-type"},
             { routeName: "sensor platform", url: "sensor-platform" },
-            { routeName: "sensor platform type", url: "sensor-platform-type" },
+            { routeName: "sensor platform configuration", url: "sensor-platform-config"},
+            { routeName: "observable properties", url: "observable-properties"},
+            { routeName: "units of mesaurement", url: "units-of-measurement" },
             { routeName: "data logs", url: "logs" }
         ],
     },
-    "view-sensors": {
-        title: 'View Sensor Platforms',
+    "user-role": {
+        dropdown_title: 'View Sensor Platforms',
         dropdown_items: [
+            { routeName: "sensor platform types ", url: "sensor-platform-types" },
             { routeName: "sensor platforms", url: "sensor-platforms" },
-            { routeName: "sensor platform types ", url: "sensor-platform-types" }
+            { routeName: "observable properties", url: "observable-properties"},
+            { routeName: "units of mesaurement", url: "units-of-measurement" },
         ],
     },
 };

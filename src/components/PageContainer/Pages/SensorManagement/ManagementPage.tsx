@@ -4,7 +4,9 @@ import DeleteContainer from "./CRUD/Delete/DeleteContainer.tsx";
 import ViewContainer from "./CRUD/View/ViewContainer.tsx";
 import SensorPlatformTypeTable from "./Tables/SensorPlatformTypeTable.tsx";
 import SensorPlatformTable from "./Tables/SensorPlatformTable.tsx";
-
+import ObservableProperties from "./Tables/ObservableProperties.tsx";
+import UnitsOfMeasurement from "./Tables/UnitsOfMeasurement.tsx";
+import SensorPlatformConfig from "./Tables/SensorPlatformConfig.tsx";
 
 interface ManagementPageProps {
     page: string;
@@ -40,6 +42,54 @@ const ManagementPage: React.FC<ManagementPageProps> = ({ page }) => {
                 {menuOpen && menuOpen.includes("View") && rowData && (
                     <ViewContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} rowData={rowData} />
                 )}
+                {menuOpen && (menuOpen.includes("Create") || menuOpen.includes("Edit")) && (
+                    <WriteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} setTableRefresh={setTableRefresh} rowData={rowData} />
+                )}
+                {menuOpen && menuOpen.includes("Delete") && (
+                    <DeleteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} rowData={rowData} setTableRefresh={setTableRefresh} />
+                )}
+            </div>
+        );
+    }
+    else if (page === "observable-properties") {
+        return (
+            <div className="page">
+                <ObservableProperties
+                    tableRefresh={tableRefresh} setTableRefresh={setTableRefresh}
+                    setMenuOpen={setMenuOpen} setRowData={setRowData}
+                />
+                {menuOpen && (menuOpen.includes("Create") || menuOpen.includes("Edit")) && (
+                    <WriteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} setTableRefresh={setTableRefresh} rowData={rowData} />
+                )}
+                {menuOpen && menuOpen.includes("Delete") && (
+                    <DeleteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} rowData={rowData} setTableRefresh={setTableRefresh} />
+                )}
+            </div>
+        );
+    }
+    else if (page === "units-of-measurement") {
+        return (
+            <div className="page">
+                <UnitsOfMeasurement
+                    tableRefresh={tableRefresh} setTableRefresh={setTableRefresh}
+                    setMenuOpen={setMenuOpen} setRowData={setRowData}
+                />
+                {menuOpen && (menuOpen.includes("Create") || menuOpen.includes("Edit")) && (
+                    <WriteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} setTableRefresh={setTableRefresh} rowData={rowData} />
+                )}
+                {menuOpen && menuOpen.includes("Delete") && (
+                    <DeleteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} rowData={rowData} setTableRefresh={setTableRefresh} />
+                )}
+            </div>
+        );
+    }
+    else if (page === "sensor-platform-config") {
+        return (
+            <div className="page">
+                <SensorPlatformConfig
+                    tableRefresh={tableRefresh} setTableRefresh={setTableRefresh}
+                    setMenuOpen={setMenuOpen} setRowData={setRowData}
+                />
                 {menuOpen && (menuOpen.includes("Create") || menuOpen.includes("Edit")) && (
                     <WriteContainer menuOpen={menuOpen} setMenuOpen={setMenuOpen} setTableRefresh={setTableRefresh} rowData={rowData} />
                 )}

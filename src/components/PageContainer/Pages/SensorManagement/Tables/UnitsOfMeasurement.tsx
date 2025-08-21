@@ -6,34 +6,36 @@ import TableBody from "./TableBody.tsx";
 import TableHeaders from "./TableHeaders.tsx";
 import { User } from "../../../../../types/User.ts";
 
-type SensorPlatformTypeProps = {
+
+type UnitsOfMeasurementProps = {
     tableRefresh: boolean;
     setTableRefresh: (value: boolean) => void;
     setMenuOpen: (value: string) => void;
     setRowData: (data: any) => void;
 };
 
-const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
+const UnitsOfMeasurement: React.FC<UnitsOfMeasurementProps> = ({
     tableRefresh,
     setTableRefresh,
     setMenuOpen,
     setRowData: setParentRowData,
 }) => {
-    const [rowData, setRowData] = useState<any[]>([]);
+      const [rowData, setRowData] = useState<any[]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = UserAuth() || {};
 
     const disableActions = user?.role === "user" || user === null;
-    const tableType = "sensor-platform-type";
+    const tableType = "unit-of-measurement";
     const addBtnMenuPath = "Create-" + tableType;
-    const dataURL = process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
-    const tableName = "SensorPlatformType";
-    const tableHeader =  (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Sensor Platform Types"
+    const dataURL =
+        process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
+    const tableName = "Units of Measurement";
+    const tableHeader = (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Units of Measurement"
     const tableCaption =
         user?.role === "admin" || user?.role === "sensortech"
-        ? "Browse through a list of sensor platform types and their associated information.\n Admin users and sensor technicians can create, edit and delete sensor types here."
-        : "Browse through a list of sensor platform types and their associated information.";
+            ? "Browse through a list of units of measurements and their associated information.\n Admin users and sensor technicians can create, edit and delete units of measurements here."
+            : "Browse through a list of units of measurements and their associated information.";
 
     // Fetch data from API and cache it
     const handleRefresh = async (refreshState: boolean, url: string) => {
@@ -51,6 +53,7 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
             setLoading(false);
         });
     };
+
     useEffect(() => {
         handleRefresh(tableRefresh, dataURL);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,5 +126,4 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
         </div>
     );
 };
-
-export default SensorPlatformTypeTable;
+export default UnitsOfMeasurement;

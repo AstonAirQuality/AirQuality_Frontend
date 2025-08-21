@@ -6,34 +6,36 @@ import TableBody from "./TableBody.tsx";
 import TableHeaders from "./TableHeaders.tsx";
 import { User } from "../../../../../types/User.ts";
 
-type SensorPlatformTypeProps = {
+
+type ObservablePropertiesProps = {
     tableRefresh: boolean;
     setTableRefresh: (value: boolean) => void;
     setMenuOpen: (value: string) => void;
     setRowData: (data: any) => void;
 };
 
-const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
+const ObservableProperties: React.FC<ObservablePropertiesProps> = ({
     tableRefresh,
     setTableRefresh,
     setMenuOpen,
     setRowData: setParentRowData,
 }) => {
-    const [rowData, setRowData] = useState<any[]>([]);
+      const [rowData, setRowData] = useState<any[]>([]);
     const [headers, setHeaders] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const { user } = UserAuth() || {};
 
     const disableActions = user?.role === "user" || user === null;
-    const tableType = "sensor-platform-type";
+    const tableType = "observable-property";
     const addBtnMenuPath = "Create-" + tableType;
-    const dataURL = process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
-    const tableName = "SensorPlatformType";
-    const tableHeader =  (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Sensor Platform Types"
+    const dataURL =
+        process.env.REACT_APP_AIRQUALITY_API_URL + tableType;
+    const tableName = "Observable Property";
+    const tableHeader = (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Observable Properties"
     const tableCaption =
         user?.role === "admin" || user?.role === "sensortech"
-        ? "Browse through a list of sensor platform types and their associated information.\n Admin users and sensor technicians can create, edit and delete sensor types here."
-        : "Browse through a list of sensor platform types and their associated information.";
+            ? "Browse through a list of observable properties and their associated information.\n Admin users and sensor technicians can create, edit and delete observable properties here."
+            : "Browse through a list of observable properties and their associated information.";
 
     // Fetch data from API and cache it
     const handleRefresh = async (refreshState: boolean, url: string) => {
@@ -51,6 +53,7 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
             setLoading(false);
         });
     };
+
     useEffect(() => {
         handleRefresh(tableRefresh, dataURL);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,5 +126,4 @@ const SensorPlatformTypeTable: React.FC<SensorPlatformTypeProps> = ({
         </div>
     );
 };
-
-export default SensorPlatformTypeTable;
+export default ObservableProperties;

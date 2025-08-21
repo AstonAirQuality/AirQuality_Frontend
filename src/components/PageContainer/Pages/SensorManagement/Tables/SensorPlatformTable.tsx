@@ -41,15 +41,18 @@ const SensorPlatformTable: React.FC<SensorPlatformTableProps> = ({
     // Fetch data from API and cache it
     const handleRefresh = async (refreshState: boolean, url: string) => {
         setLoading(true);
-        try {
-            const result = await RefreshData(refreshState, url, tableType);
-            result.sort((a: any, b: any) => (a.id > b.id ? 1 : -1));
-            setHeaders(Object.keys(result[0] || {}));
-            setRowData(result);
+        await RefreshData(refreshState, url, tableType).then((data) => {
+            data.sort((a: any, b: any) => (a.id > b.id ? 1 : -1));
+            setHeaders(Object.keys(data[0] || {}));
+            setRowData(data);
             setTableRefresh(false);
-        } finally {
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+            setRowData([]);
+            setHeaders([]);
+        }).finally(() => {
             setLoading(false);
-        }
+        });
     };
 
     useEffect(() => {

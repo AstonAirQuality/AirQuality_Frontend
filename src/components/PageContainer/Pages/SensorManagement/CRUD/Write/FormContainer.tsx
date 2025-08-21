@@ -2,6 +2,7 @@ import WriteSensorPlatformType from './Forms/WriteSensorPlatformType.tsx'
 import WriteSensorPlatform from './Forms/WriteSensorPlatform.tsx'
 import CreatePlumeSensorPlatform from './Forms/CreatePlumeSensorPlatform.tsx'
 import ScheduleTask from './ScheduleTask/ScheduleTask.tsx'
+import WriteSensorPlatformConfig from './Forms/WriteSensorPlatformConfig.tsx'
 import CustomAlert from '../../../SharedComponents/CustomAlert.tsx'
 import { useState, useEffect, ReactNode } from 'react'
 import { UserAuth } from '../../../../../context/AuthContext.tsx'
@@ -110,6 +111,34 @@ const FormContainer: React.FC<FormContainerProps> = ({
                     requestMethod={{
                         method: "POST",
                         url: `${process.env.REACT_APP_AIRQUALITY_API_URL}api-task/schedule/ingest-bysensorid`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Edit-sensor-platform-config") {
+            setFormElements(
+                <WriteSensorPlatformConfig
+                    rowData={rowData}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "PUT",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config/${rowData.id}`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Create-sensor-platform-config") {
+            setFormElements(
+                <WriteSensorPlatformConfig
+                    rowData={{}}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "POST",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config`
                     }}
                 />
             )

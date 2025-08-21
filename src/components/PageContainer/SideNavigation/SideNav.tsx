@@ -108,15 +108,15 @@ const SideNav = (props: SideNavProps) => {
                         {user?.role === "admin" || user?.role === "sensortech" ? (
                             <SideNavDropdown
                                 icon={<BsGearFill size={28} />}
-                                text={NavLinks["manage-sensors"]["title"]}
-                                dropdown_items={NavLinks["manage-sensors"]["dropdown_items"]}
+                                text={NavLinks["technician-role"]["dropdown_title"]}
+                                dropdown_items={NavLinks["technician-role"]["dropdown_items"]}
                                 setsideNavMenu={props.setsideNavMenu}
                             />
                         ) : (
                             <SideNavDropdown
                                 icon={<BsSearch size={28} />}
-                                text={NavLinks["view-sensors"]["title"]}
-                                dropdown_items={NavLinks["view-sensors"]["dropdown_items"]}
+                                text={NavLinks["user-role"]["dropdown_title"]}
+                                dropdown_items={NavLinks["user-role"]["dropdown_items"]}
                                 setsideNavMenu={props.setsideNavMenu}
                             />
                         )}

@@ -129,7 +129,18 @@ const WriteSensorPlatformType: React.FC<SensorPlatformTypeProps> = ({
                     className={`form-input h-96 ${propertiesTransition ? 'form-input-error' : 'form-input-error-fade'}`}
                     id="properties"
                     name="properties"
-                    value={state.properties}
+                    value={
+                        (() => {
+                            try {
+                                // Pretty print JSON if valid, else show as is
+                                return state.properties
+                                    ? JSON.stringify(JSON.parse(state.properties), null, 2)
+                                    : '';
+                            } catch {
+                                return state.properties;
+                            }
+                        })()
+                    }
                     onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                         handleChange(e, setChanges, setState, state, formData)
                     }

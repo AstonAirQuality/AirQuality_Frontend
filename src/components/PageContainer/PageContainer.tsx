@@ -35,6 +35,16 @@ const PageContainer: React.FC = () => {
           path="/sensor-platform-type"
           element={<ManagementPage page="sensor-platform-type"/>}
         />
+        <Route
+          path="/observable-properties"
+          element={<ManagementPage page="observable-properties"/>}
+        />
+        <Route path="/units-of-measurement"
+        element={<ManagementPage page="units-of-measurement"/>}
+        />
+        <Route path="/sensor-platform-config"
+          element={<ManagementPage page="sensor-platform-config"/>}
+        />
         <Route path="/signin" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
