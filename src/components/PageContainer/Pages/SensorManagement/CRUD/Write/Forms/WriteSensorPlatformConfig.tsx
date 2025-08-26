@@ -36,7 +36,7 @@ interface SensorPlatformConfigProps {
     rowData: {
         sensor_type_id?: number;
         authentication_url?: string;
-        authentication_method?: Record<string, unknown> | string;
+        authentication_method?: Record<string, unknown> | string 
         api_url?: string;
         api_method?: Record<string, unknown> | string;
         sensor_mappings?: Record<string, string>; // e.g., {"ParticulateMatter2.5": "PM2.5"}
@@ -50,8 +50,8 @@ interface SensorPlatformConfigProps {
 
 interface FormData {
     sensor_type_id?: number | null;
-    authentication_url: string;
-    authentication_method: authentication_method;
+    authentication_url: string | null;
+    authentication_method: authentication_method | null;
     api_url: string;
     api_method: api_method;
     sensor_mappings?: Record<string, string>; // e.g., {"ParticulateMatter2.5": "PM2.5"}
@@ -102,7 +102,6 @@ const WriteSensorPlatformType: React.FC<SensorPlatformConfigProps> = ({
     };
 
     const [state, setState] = useState<FormData>(formData);
-    console.log('WriteSensorPlatformType state:', state);
     const [alertMessage, setAlertMessage] = useState<string | [string, string] | ''>('');
 
     // custom transitions for form fields
@@ -126,54 +125,41 @@ const WriteSensorPlatformType: React.FC<SensorPlatformConfigProps> = ({
         }
 
         
-        // parse authentication method to ensure it is a valid JSON
-        try {
-            JSON.parse(JSON.stringify(state.authentication_method));
-        } catch (e) {
-            setAlertMessage('Invalid JSON format');
-            setAuthenticationMethodTransition(true);
-            return false;
+        // parse authentication method to ensure it is a valid JSON only if it's a string
+        if (typeof state.authentication_method === 'string') {
+            try {
+                if (!state.authentication_method || state.authentication_method === 'null') {
+                    state.authentication_method = null;
+                    return true;
+                }
+                else{
+                    const auth_method = JSON.parse(state.authentication_method);
+                    if (auth_method !== null && typeof auth_method !== 'string') {
+                        state.authentication_method = auth_method;
+                    }
+                }
+            } catch (e) {
+                console.log('Error parsing authentication_method:', e);
+                setAlertMessage('Invalid JSON format');
+                setAuthenticationMethodTransition(true);
+                return false;
+            }
         }
         
-        // parse api method to ensure it is a valid JSON
-        try {
-            JSON.parse(JSON.stringify(state.api_method));
-        } catch (e) {
-            setAlertMessage('Invalid API method JSON format');
-            setApiMethodTransition(true);
-            return false;
+        // parse api method to ensure it is a valid JSON only if it's a string
+        if (typeof state.api_method === 'string') {
+            try {
+                const api_method = JSON.parse(state.api_method);
+                console.log('Parsed api_method:', api_method);
+                if (api_method !== null && typeof api_method !== 'string') {
+                    state.api_method = api_method;
+                }
+            } catch (e) {
+                setAlertMessage('Invalid API method JSON format');
+                setApiMethodTransition(true);
+                return false;
+            }
         }
-
-        // // api_method should have datetime_params check that it matches the expected format
-        // // Ensure api_method is an object
-        // let apiMethodObj: any = state.api_method;
-        // if (typeof apiMethodObj === 'string') {
-        //     try {
-        //     apiMethodObj = JSON.parse(apiMethodObj);
-        //     } catch {
-        //     setAlertMessage('api_method is not valid JSON');
-        //     setApiMethodTransition(true);
-        //     return false;
-        //     }
-        // }
-
-        // // Validate datetime_params inside url_params
-        // if (
-        //     !apiMethodObj.url_params ||
-        //     !apiMethodObj.url_params.datetime_params ||
-        //     typeof apiMethodObj.url_params.datetime_params !== 'object'
-        // ) {
-        //     setAlertMessage('api_method.url_params.datetime_params is required and must be an object');
-        //     setApiMethodTransition(true);
-        //     return false;
-        // }
-
-        // const { format, start_key, end_key } = apiMethodObj.url_params.datetime_params;
-        // if (!format || !start_key || !end_key) {
-        //     setAlertMessage('datetime_params must include format, start_key, and end_key');
-        //     setApiMethodTransition(true);
-        //     return false;
-        // }
 
         return true;
     }
@@ -196,13 +182,14 @@ const WriteSensorPlatformType: React.FC<SensorPlatformConfigProps> = ({
         e.preventDefault();
         if (validateForm()) {
             setLoading(true);
+
             // Parse properties before submit
             const submitState = {
                 sensor_type_id: state.sensor_type_id ? parseInt(String(state.sensor_type_id)) : null,
                 authentication_url: state.authentication_url ? state.authentication_url : null,
-                authentication_method: state.authentication_method ? JSON.parse(state.authentication_method as unknown as string) as authentication_method : null,
+                authentication_method: state.authentication_method ? state.authentication_method : null,
                 api_url: state.api_url,
-                api_method: JSON.parse(state.api_method as unknown as string) as api_method,
+                api_method: state.api_method,
                 sensor_mappings: state.sensor_mappings
             };
             await submitForm(submitState, requestMethod).finally(() => setLoading(false));
@@ -269,7 +256,7 @@ const WriteSensorPlatformType: React.FC<SensorPlatformConfigProps> = ({
                     id="authentication_url"
                     type="text"
                     name="authentication_url"
-                    value={state.authentication_url}
+                    value={state.authentication_url ? state.authentication_url : ''}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                         handleChange(e, setChanges, setState, state, formData)
                     }

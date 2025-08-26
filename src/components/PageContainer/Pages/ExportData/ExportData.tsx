@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import CustomFadingAlert from '../SharedComponents/CustomFadingAlert.tsx';
-
+import ToolTip from '../SharedComponents/ToolTip.tsx';
 type ColumnsType = {
     [key: string]: boolean;
 };
@@ -8,7 +8,9 @@ type ColumnsType = {
 type ExportDataState = {
     start: string;
     end: string;
-    columns: ColumnsType;
+    measurement_data: ColumnsType;
+    measurement_columns?: string;
+    deserialize?: boolean;
     spatial_query_type: string;
     geom: string;
     sensor_ids: string[];
@@ -19,7 +21,9 @@ const sensorSummaryColumns = ["sensor_id", "measurement_count", "measurement_dat
 const initialFormData: ExportDataState = {
     start: new Date().toISOString().slice(0, 10),
     end: new Date().toISOString().slice(0, 10),
-    columns: { "sensor_id": false, "measurement_count": false, "measurement_data": false, "stationary": false, "geom": false, "timestamp": false },
+    measurement_data: { "sensor_id": false, "measurement_count": false, "measurement_data": false, "stationary": false, "geom": false, "timestamp": false },
+    measurement_columns: "",
+    deserialize: false,
     spatial_query_type: "",
     geom: "",
     sensor_ids: [],
@@ -31,10 +35,12 @@ const ExportData = () => {
     const [alertMessage, setAlertMessage] = useState<string | [string, string] | ''>('');
     const [startDateTransition, setStartDateTransition] = useState(false);
     const [endDateTransition, setEndDateTransition] = useState(false);
-    const [columnsTransition, setColumnsTransition] = useState(false);
+    const [sensorSummaryDataTransiton, setSensorSummaryDataTransiton] = useState(false);
+    const [measurementColumnsTransition, setMeasurementColumnsTransition] = useState(false);
     const [spatialQueryTypeTransition, setSpatialQueryTypeTransition] = useState(false);
     const [geomTransition, setGeomTransition] = useState(false);
     const [output, setOutput] = useState<string>('');
+
 
     function validateForm() {
         if (!state.start || !state.end) {
@@ -50,14 +56,14 @@ const ExportData = () => {
         }
 
         let columnsSelected = false;
-        for (const value of Object.values(state.columns)) {
+        for (const value of Object.values(state.measurement_data)) {
             if (value) {
                 columnsSelected = true;
             }
         }
         if (!columnsSelected) {
             setAlertMessage(['Selecting at least one column is required', 'error']);
-            setColumnsTransition(true);
+            setSensorSummaryDataTransiton(true);
             return false;
         }
 
@@ -69,6 +75,19 @@ const ExportData = () => {
             setAlertMessage(['Missing required fields', 'error']);
             setSpatialQueryTypeTransition(true);
             return false;
+        }
+
+        //validate measurementColumns if measurement_data is selected
+        if (state.measurement_data["measurement_data"]) {
+            if (state.measurement_columns) {
+                // validate measurementColumns is comma separated values
+                const measurementColumnsArray = state.measurement_columns.split(',').map(col => col.trim());
+                if (measurementColumnsArray.length === 0 || measurementColumnsArray.some(col => col === '')) {
+                    setAlertMessage(['measurement_columns must be a comma separated list of values', 'error']);
+                    setMeasurementColumnsTransition(true);
+                    return false;
+                }
+            }
         }
 
         return true;
@@ -95,7 +114,7 @@ const ExportData = () => {
 
         // format columns
         let formattedColumns: string[] = [];
-        for (const [key, value] of Object.entries(state.columns)) {
+        for (const [key, value] of Object.entries(state.measurement_data)) {
             if (value) {
                 formattedColumns.push(key);
             }
@@ -122,12 +141,12 @@ const ExportData = () => {
         const timeout = setTimeout(() => {
             setStartDateTransition(false);
             setEndDateTransition(false);
-            setColumnsTransition(false);
+            setSensorSummaryDataTransiton(false);
             setSpatialQueryTypeTransition(false);
             setGeomTransition(false);
         }, 8000);
         return () => clearTimeout(timeout);
-    }, [startDateTransition, endDateTransition, columnsTransition, spatialQueryTypeTransition, geomTransition]);
+    }, [startDateTransition, endDateTransition, sensorSummaryDataTransiton, spatialQueryTypeTransition, geomTransition]);
 
     function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         const target = e.target as HTMLInputElement | HTMLSelectElement;
@@ -162,55 +181,58 @@ const ExportData = () => {
             setLoading(false);
         }
     }
-
     async function submitForm() {
-        let requestURL = process.env.REACT_APP_AIRQUALITY_API_URL + "sensor-summary/as-json";
-        const formatted = formatData();
-        let firstParam = true;
-        for (const [key, value] of Object.entries(formatted)) {
-            if (key === "columns" && Array.isArray(value)) {
-                for (const column of value) {
-                    requestURL += `${firstParam ? '?' : '&'}columns=${encodeURIComponent(column)}`;
-                    firstParam = false;
-                }
-            } else if (Array.isArray(value)) {
-                for (const v of value) {
-                    requestURL += `${firstParam ? '?' : '&'}${key}=${encodeURIComponent(v)}`;
-                    firstParam = false;
-                }
-            } else {
-                requestURL += `${firstParam ? '?' : '&'}${key}=${encodeURIComponent(String(value))}`;
-                firstParam = false;
-            }
-        }
-
-        setAlertMessage(["Processing your request. This may take a few seconds.", "info"]);
-
-        const requestOptions = {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        };
-
-        await fetch(requestURL, requestOptions).then(
-            async response => {
-                if (response.status === 200) {
-                    let data = await response.json();
-                    if (data.length > 0) {
-                        const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
-                            JSON.stringify(data)
-                        )}`;
-                        setAlertMessage(["The request was processed successfully, please click the download button below to download the data.", "success"]);
-                        setOutput(jsonString);
-                    } else {
-                        setAlertMessage(["The request was processed successfully, but no data was returned.", "warning"]);
+        try {
+            let requestURL = process.env.REACT_APP_AIRQUALITY_API_URL + "sensor-summary/as-json";
+            const formatted = formatData();
+            let firstParam = true;
+            for (const [key, value] of Object.entries(formatted)) {
+                if (key === "columns" && Array.isArray(value)) {
+                    for (const column of value) {
+                        requestURL += `${firstParam ? '?' : '&'}columns=${encodeURIComponent(column)}`;
+                        firstParam = false;
+                    }
+                } else if (Array.isArray(value)) {
+                    for (const v of value) {
+                        requestURL += `${firstParam ? '?' : '&'}${key}=${encodeURIComponent(v)}`;
+                        firstParam = false;
                     }
                 } else {
-                    setAlertMessage(["The request was unsuccessful. Please try again later.", "error"]);
+                    requestURL += `${firstParam ? '?' : '&'}${key}=${encodeURIComponent(String(value))}`;
+                    firstParam = false;
                 }
             }
-        );
+
+            setAlertMessage(["Processing your request. This may take a few seconds.", "info"]);
+
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+
+            await fetch(requestURL, requestOptions).then(
+                async response => {
+                    if (response.status === 200) {
+                        let data = await response.json();
+                        if (data.length > 0) {
+                            const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+                                JSON.stringify(data)
+                            )}`;
+                            setAlertMessage(["The request was processed successfully, please click the download button below to download the data.", "success"]);
+                            setOutput(jsonString);
+                        } else {
+                            setAlertMessage(["The request was processed successfully, but no data was returned.", "warning"]);
+                        }
+                    } else {
+                        setAlertMessage(["The request was unsuccessful. Please try again later.", "error"]);
+                    }
+                }
+            );
+        } catch (error) {
+            setAlertMessage(["An error occurred while processing your request.", "error"]);
+        }
     }
 
     return (
@@ -224,6 +246,11 @@ const ExportData = () => {
                 <div className="mb-4">
                     <label className="form-label">
                         start date*
+                        <ToolTip 
+                            title='The start date for the data export in DD/MM/YYY format.'
+                            message='This is a required field.'
+                            items={{ "start_date": '01/01/2025' }}
+                        />
                     </label>
                     <input className={`form-input ${startDateTransition ? 'form-input-error' : 'form-input-error-fade'}`}
                         id="start" type="date"
@@ -235,6 +262,11 @@ const ExportData = () => {
                 <div className="mb-4">
                     <label className="form-label">
                         end date*
+                        <ToolTip 
+                            title='The end date for the data export in DD/MM/YYY format.'
+                            message='This is a required field.'
+                            items={{ "end_date": '01/02/2025' }}
+                        />
                     </label>
                     <input className={`form-input ${endDateTransition ? 'form-input-error' : 'form-input-error-fade'}`}
                         id="end" type="date"
@@ -246,16 +278,21 @@ const ExportData = () => {
                 <div className="mb-4">
                     <label className="form-label">
                         columns*
+                        <ToolTip 
+                            title='The columns to include in the exported data.'
+                            message='At least one column MUST be selected'
+                            items={{ columns: sensorSummaryColumns.join(', ') }}
+                        />
                     </label>
-                    <div className="form-group">
+                    <div className={`form-group ${sensorSummaryDataTransiton ? 'form-input-error' : 'form-input-error-fade'}`}>
                         {sensorSummaryColumns.map((column, index) => (
                             <label className="form-label" key={index}>
                                 <input
                                     className="form-checkbox"
                                     type="checkbox"
-                                    name="columns"
+                                    name="measurement_data"
                                     value={column}
-                                    checked={state.columns[column]}
+                                    checked={state.measurement_data[column]}
                                     onChange={handleChange}
                                 />
                                 <i className=""></i> {column}
@@ -264,9 +301,62 @@ const ExportData = () => {
                     </div>
                 </div>
 
+                {/* if measurement_data is selected then show the input for measurement_columns and allcolumns */}
+                {state.measurement_data["measurement_data"] && (
+                    <>
+                        <div className="mb-4">
+                            <label className="form-label">
+                                measurement_columns (optional)
+                                <ToolTip 
+                                    title='The specific measurement columns to include in the exported data.'
+                                    message='This can be left empty if you want all measurement data columns. If provided, it should be a comma-separated list of column names.'
+                                    items={{ measurement_columns: 'e.g: "PM1,PM2.5,PM10"' }}
+                                />
+                            </label>
+                            <input className={`form-input ${measurementColumnsTransition ? 'form-input-error' : 'form-input-error-fade'}`}
+                                id="measurement_columns" type="text"
+                                name="measurement_columns"
+                                value={state.measurement_columns}
+                                onChange={handleChange} />
+                        </div>
+
+                        {!state.measurement_columns &&(
+                            <div className="mb-4">
+                                <label className="form-label flex items-center gap-2">
+                                    <input
+                                        className="form-checkbox"
+                                        type="checkbox"
+                                        name="deserialize"
+                                        checked={state.deserialize}
+                                        onChange={(e) => {
+                                            setState(prev => ({
+                                                ...prev,
+                                                deserialize: e.target.checked
+                                            }));
+                                        }}
+                                    />
+                                    <span>deserialize</span>
+                                    <ToolTip 
+                                        title='Deserialize: Only applicable when exporting all measurement data columns'
+                                        message='If checked, the measurement data will be deserialized into individual columns for each measurement type.'
+                                        items={{ deserialize: '(bool) e.g: true' }}
+                                    />
+                                </label>
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {/* spatial query inputs */}
+
                 <div className="mb-4">
                     <label className="form-label">
                         spatial_query_type
+                        <ToolTip 
+                            title='The type of spatial query to perform.'
+                            message='This is optional but if geom is provided then this is required.'
+                            items={{ spatial_query_type: 'e.g: "within", "intersects", "contains", "overlaps"' }}
+                        />
                     </label>
                     <select className={`form-select ${spatialQueryTypeTransition ? 'form-input-error' : 'form-input-error-fade'}`}
                         id="spatial_query_type"
@@ -284,6 +374,11 @@ const ExportData = () => {
                 <div className="mb-4">
                     <label className="form-label">
                         geom (WKT format)
+                        <ToolTip 
+                            title='The geometry for the spatial query in WKT format.'
+                            message='This is optional but if spatial_query_type is provided then this is required.'
+                            items={{ geom: 'e.g: "POINT(-71.060316 48.432044)"' }}
+                        />
                     </label>
                     <input className={`form-input ${geomTransition ? 'form-input-error' : 'form-input-error-fade'}`}
                         id="geom" type="text"
@@ -295,6 +390,11 @@ const ExportData = () => {
                 <div className="mb-4">
                     <label className="form-label">
                         sensor_ids
+                        <ToolTip 
+                            title='A comma-separated list of sensor IDs to filter the data export.'
+                            message='This is optional. If provided, only data from the specified sensors will be included in the export.'
+                            items={{ sensor_ids: 'e.g: "1,2,3"' }}
+                        />
                     </label>
                     <input className="form-input"
                         id="sensor_ids" type="text"

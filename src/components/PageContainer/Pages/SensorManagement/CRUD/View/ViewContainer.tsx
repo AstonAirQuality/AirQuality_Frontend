@@ -54,7 +54,7 @@ class SensorSummary {
             if (firstKey && this.measurement_data[firstKey]) {
                 columns = Object.keys(this.measurement_data[firstKey]);
                 columns = columns.filter(
-                    (col) => col !== "latitude" && col !== "longitude"
+                    (col) => col !== "Latitude" && col !== "Longitude" && col !== "latitude" && col !== "longitude"
                 );
             }
         }
@@ -146,7 +146,7 @@ const ViewContainer: React.FC<ViewContainerProps> = ({
                 "timestamp",
             ];
             const url = `${base_url}start=${start_date}&end=${end_date}&columns=${columns.join(
-                "&columns="
+                ","
             )}&join_sensor_type=true`;
             fetch(url)
                 .then((response) => response.json())

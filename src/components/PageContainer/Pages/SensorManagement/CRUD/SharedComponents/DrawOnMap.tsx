@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, MutableRefObject } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl, { Map, MapboxOptions, GeolocateControl, FullscreenControl, NavigationControl, ScaleControl } from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import CustomFadingAlert from '../../../SharedComponents/CustomFadingAlert.tsx';

@@ -39,21 +39,55 @@ interface TableActionsDropdownItemsProps {
 
 // Recursive tree renderer
 const ObjectTree: React.FC<{ data: any; level?: number }> = ({ data, level = 0 }) => {
+    const [openKeys, setOpenKeys] = useState<Record<string, boolean>>({});
+
     if (typeof data !== "object" || data === null) {
         return <span>{String(data)}</span>;
     }
+
+    const handleToggle = (key: string) => {
+        setOpenKeys((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }));
+    };
+
     return (
         <ul style={{ marginLeft: level * 16 }}>
-            {Object.entries(data).map(([key, val]) => (
-                <li key={key}>
-                    <strong>{key}:</strong>{" "}
-                    {typeof val === "object" && val !== null ? (
-                        <ObjectTree data={val} level={level + 1} />
-                    ) : (
-                        <span>{String(val)}</span>
-                    )}
-                </li>
-            ))}
+            {Object.entries(data).map(([key, val]) => {
+                const isObject = typeof val === "object" && val !== null;
+                const isOpen = openKeys[key] ?? false;
+                return (
+                    <li key={key}>
+                        {isObject && (
+                            <button
+                                onClick={() => handleToggle(key)}
+                                style={{
+                                    marginRight: 4,
+                                    cursor: "pointer",
+                                    background: "none",
+                                    border: "none",
+                                    color: "#2563eb",
+                                    fontWeight: "bold",
+                                }}
+                                aria-label={isOpen ? "Collapse" : "Expand"}
+                            >
+                                {isOpen ? "▼" : "▶"}
+                            </button>
+                        )}
+                        <strong>{key}:</strong>{" "}
+                        {isObject ? (
+                            isOpen ? (
+                                <ObjectTree data={val} level={level + 1} />
+                            ) : (
+                                <span style={{ color: "#888" }}>{Array.isArray(val) ? "[...]" : "{...}"}</span>
+                            )
+                        ) : (
+                            <span>{String(val)}</span>
+                        )}
+                    </li>
+                );
+            })}
         </ul>
     );
 };

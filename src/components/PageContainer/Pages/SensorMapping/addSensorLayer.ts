@@ -31,18 +31,21 @@ export default function addSensorLayer(id_: string, currentMap: Map) {
 
     let htmlString = `<h3>Sensor ID: ${id_}</h3>`;
 
-    Object.keys(selectedFeature.properties || {}).forEach((key) => {
-      let value = selectedFeature.properties[key];
+    Object.keys(selectedFeature.sensor_metadata || {}).forEach((key) => {
+      let value = selectedFeature.sensor_metadata[key];
       if (typeof value === 'number') {
         value = value.toFixed(3);
       }
       htmlString += `<p>${key}: ${value}</p>`;
     });
 
-    currentMap.flyTo({ center: (CenterPoint.geometry.coordinates as [number, number]).slice() });
+    const coords = CenterPoint.geometry.coordinates;
+    if (Array.isArray(coords) && coords.length >= 2) {
+      currentMap.flyTo({ center: [coords[0], coords[1]] as [number, number] });
+    }
 
     new mapboxgl.Popup()
-      .setLngLat((CenterPoint.geometry.coordinates as [number, number]).slice())
+      .setLngLat([CenterPoint.geometry.coordinates[0], CenterPoint.geometry.coordinates[1]] as [number, number])
       .setHTML(htmlString)
       .addTo(currentMap);
   });

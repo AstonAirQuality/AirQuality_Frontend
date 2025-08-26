@@ -3,6 +3,8 @@ import WriteSensorPlatform from './Forms/WriteSensorPlatform.tsx'
 import CreatePlumeSensorPlatform from './Forms/CreatePlumeSensorPlatform.tsx'
 import ScheduleTask from './ScheduleTask/ScheduleTask.tsx'
 import WriteSensorPlatformConfig from './Forms/WriteSensorPlatformConfig.tsx'
+import WriteUnitOfMeasurement from './Forms/WriteUnitOfMeasurement.tsx'
+import WriteOberservableProperty from './Forms/WriteObservableProperty.tsx'
 import CustomAlert from '../../../SharedComponents/CustomAlert.tsx'
 import { useState, useEffect, ReactNode } from 'react'
 import { UserAuth } from '../../../../../context/AuthContext.tsx'
@@ -124,7 +126,7 @@ const FormContainer: React.FC<FormContainerProps> = ({
                     submitForm={submitForm}
                     requestMethod={{
                         method: "PUT",
-                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config/${rowData.id}`
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config/${rowData.sensor_type_id}`
                     }}
                 />
             )
@@ -139,6 +141,62 @@ const FormContainer: React.FC<FormContainerProps> = ({
                     requestMethod={{
                         method: "POST",
                         url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Edit-unit-of-measurement") {
+            setFormElements(
+                <WriteUnitOfMeasurement
+                    rowData={rowData}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "PUT",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}unit-of-measurement/${rowData.name}`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Create-unit-of-measurement") {
+            setFormElements(
+                <WriteUnitOfMeasurement
+                    rowData={{}}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "POST",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}unit-of-measurement`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Edit-observable-property") {
+            setFormElements(
+                <WriteOberservableProperty
+                    rowData={rowData}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "PUT",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}observable-property/${rowData.name}`
+                    }}
+                />
+            )
+        }
+        else if (menuOpen === "Create-observable-property") {
+            setFormElements(
+                <WriteOberservableProperty
+                    rowData={{}}
+                    setChanges={setChanges}
+                    setMenuOpen={setMenuOpen}
+                    submitForm={submitForm}
+                    requestMethod={{
+                        method: "POST",
+                        url: `${process.env.REACT_APP_AIRQUALITY_API_URL}observable-property`
                     }}
                 />
             )

@@ -1,5 +1,5 @@
 import { VscClose } from "react-icons/vsc";
-import { useState, useEffect, MouseEvent } from "react";
+import { useState, useEffect, MouseEvent, ReactNode } from "react";
 import CustomAlert from '../../../SharedComponents/CustomAlert.tsx';
 import { UserAuth } from "../../../../../context/AuthContext.tsx";
 
@@ -15,7 +15,7 @@ interface DeleteContainerProps {
     setTableRefresh: (value: boolean) => void;
 }
 
-interface RequestURL {
+interface RequestMethod {
     method: string;
     url: string;
 }
@@ -26,8 +26,8 @@ const DeleteContainer: React.FC<DeleteContainerProps> = ({
     rowData,
     setTableRefresh,
 }) => {
-    const [submissionAlert, setSubmissionAlert] = useState<JSX.Element | null>(null);
-    const [requestURL, setRequestURL] = useState<RequestURL>({ method: "", url: "" });
+    const [submissionAlert, setSubmissionAlert] = useState<ReactNode | null>(null);
+    const [requestMethod, setRequestMethod] = useState<RequestMethod>({ method: "", url: "" });
     const { user } = UserAuth() || {};;
 
     function handleClose(e: MouseEvent<HTMLDivElement>) {
@@ -39,15 +39,33 @@ const DeleteContainer: React.FC<DeleteContainerProps> = ({
     useEffect(() => {
         setSubmissionAlert(null);
         if (rowData !== null) {
-            if (menuOpen === "Delete-SensorPlatformType") {
-                setRequestURL({
+            if (menuOpen === "Delete-sensor-platform-type") {
+                setRequestMethod({
                     method: "DELETE",
                     url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-type/${rowData.id}`,
                 });
-            } else if (menuOpen === "Delete-SensorPlatform") {
-                setRequestURL({
+            } else if (menuOpen === "Delete-sensor-platform") {
+                setRequestMethod({
                     method: "DELETE",
                     url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor/${rowData.id}`,
+                });
+            }
+            else if (menuOpen === "Delete-observable-property") {
+                setRequestMethod({
+                    method: "DELETE",
+                    url: `${process.env.REACT_APP_AIRQUALITY_API_URL}observable-property/${rowData.name}`,
+                });
+            }
+            else if (menuOpen === "Delete-unit-of-measurement") {
+                setRequestMethod({
+                    method: "DELETE",
+                    url: `${process.env.REACT_APP_AIRQUALITY_API_URL}unit-of-measurement/${rowData.name}`,
+                });
+            }
+            else if (menuOpen === "Delete-sensor-platform-config") {
+                setRequestMethod({
+                    method: "DELETE",
+                    url: `${process.env.REACT_APP_AIRQUALITY_API_URL}sensor-platform-config/${rowData.sensor_type_id}`,
                 });
             }
         }
@@ -64,7 +82,7 @@ const DeleteContainer: React.FC<DeleteContainerProps> = ({
         );
 
         const requestOptions: RequestInit = {
-            method: requestURL.method,
+            method: requestMethod.method,
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${user?.access_token}`,
@@ -72,7 +90,7 @@ const DeleteContainer: React.FC<DeleteContainerProps> = ({
         };
 
         try {
-            const response = await fetch(requestURL.url, requestOptions);
+            const response = await fetch(requestMethod.url, requestOptions);
             if (response.ok) {
                 setSubmissionAlert(
                     <CustomAlert

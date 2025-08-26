@@ -15,6 +15,7 @@ import Unauthorised from './Pages/Redirects/Unauthorised.tsx';
 import NotFound from './Pages/Redirects/NotFound.tsx';
 import ProtectedRoute from '../context/ProtectedRoute.tsx';
 import ExportData from './Pages/ExportData/ExportData.tsx';
+import SenmaticEnrichment from './Pages/SemanticEnrichment/SemanticEnrichment.tsx';
 
 const PageContainer: React.FC = () => {
   const [sideNavMenu, setsideNavMenu] = useState<boolean>(false);
@@ -27,6 +28,7 @@ const PageContainer: React.FC = () => {
       />
       <Routes>
         <Route path="/" element={<Home/>} />
+        <Route path="/semantic-enrichment" element={<SenmaticEnrichment/>} />
         <Route
           path="/sensor-platform"
           element={<ManagementPage page="sensor-platform"/>}
