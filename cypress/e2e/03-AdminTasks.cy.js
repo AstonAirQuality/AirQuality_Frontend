@@ -54,7 +54,7 @@ describe('Sensor Platform Types', function () {
 
       cy.get('#description').type('test')
 
-      cy.get('#properties').type('{{}"test":"test"}')
+      cy.get('#sensor_metadata').type('{{}"test":"test"}')
 
       cy.get('.bg-green-500').click()
 
