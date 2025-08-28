@@ -58,7 +58,7 @@ describe('SensorPlatforms', function () {
 
       cy.visit('http://localhost:3000/sensor-platforms')
 
-      cy.intercept("GET", "http://localhost:8000/sensor/joined?columns=id&columns=lookup_id&columns=serial_number&columns=active&columns=stationary_box&columns=time_updated&join_sensor_types=true&join_user=true").as("get_data")
+      cy.intercept("GET", "http://localhost:8000/sensor/joined?columns=id&columns=lookup_id&columns=serial_number&columns=active&columns=stationary_box&columns=time_updated&join_user=true").as("get_data")
 
       cy.wait("@get_data").its('response.statusCode').should('equal', 200)
 

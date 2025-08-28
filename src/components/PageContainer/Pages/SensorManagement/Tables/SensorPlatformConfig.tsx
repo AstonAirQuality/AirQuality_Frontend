@@ -41,7 +41,7 @@ const SensorPlatformConfig: React.FC<SensorPlatformConfigProps> = ({
     // Fetch data from API and cache it
     const handleRefresh = async (refreshState: boolean, url: string) => {
         setLoading(true);
-        await RefreshData(refreshState, url, tableType).then((data) => {
+        await RefreshData(refreshState, url, tableType, {'Authorization': `Bearer ${user?.access_token}` }).then((data) => {
             if (data === null || data.length === 0) {
                 throw new Error("No data found");
             }

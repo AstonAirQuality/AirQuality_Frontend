@@ -354,7 +354,7 @@ const WriteSensorPlatform: React.FC<WriteSensorPlatformProps> = ({
                 />
                 <datalist id="brow">
                     <option value="None">None</option>
-                    {userinfo?.map((user) => (
+                    {(Array.isArray(userinfo) ? userinfo : []).map((user) => (
                         <option key={user.uid} value={user.username + ' (' + user.uid + ')'}></option>
                     ))}
                 </datalist>

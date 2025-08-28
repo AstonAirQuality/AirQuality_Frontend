@@ -30,7 +30,7 @@ const SensorPlatformTable: React.FC<SensorPlatformTableProps> = ({
     const addBtnMenuPath = "Create-" + tableType;
     const dataURL =
         process.env.REACT_APP_AIRQUALITY_API_URL + tableType +
-        "/joined?columns=id&columns=lookup_id&columns=serial_number&columns=active&columns=active_reason&columns=stationary_box&columns=time_updated&join_sensor_types=true&join_user=true";
+        "/joined?columns=id&columns=lookup_id&columns=serial_number&columns=active&columns=active_reason&columns=stationary_box&columns=time_updated&join_user=true";
     const tableName = "SensorPlatform";
     const tableHeader = (user?.role === "admin" || user?.role === "sensortech" ? "Manage " : "") + "Sensor Platforms"
     const tableCaption =

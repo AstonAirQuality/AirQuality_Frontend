@@ -131,7 +131,10 @@ const ViewContainer: React.FC<ViewContainerProps> = ({
                 .split("-")
                 .reverse()
                 .join("-");
-            const end_date = new Date(rowData.time_updated)
+            // Add one day to the end_date
+            const endDateObj = new Date(rowData.time_updated);
+            endDateObj.setDate(endDateObj.getDate() + 1);
+            const end_date = endDateObj
                 .toISOString()
                 .split("T")[0]
                 .split("-")
@@ -147,7 +150,8 @@ const ViewContainer: React.FC<ViewContainerProps> = ({
             ];
             const url = `${base_url}start=${start_date}&end=${end_date}&columns=${columns.join(
                 ","
-            )}&join_sensor_type=true`;
+            )}&sensor_ids=${rowData.id}`;
+            console.log(url)
             fetch(url)
                 .then((response) => response.json())
                 .then((data) => {

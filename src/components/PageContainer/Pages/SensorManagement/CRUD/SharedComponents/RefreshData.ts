@@ -16,15 +16,19 @@
 async function RefreshData<T = any>(
     refresh: boolean,
     dataURL: string,
-    cacheKey: string
+    cacheKey: string,
+    headers: { [key: string]: string } = {} // e.g. { 'Authorization': `Bearer ${user?.access_token}` }
 ): Promise<T | null> {
     let result = window.sessionStorage.getItem(cacheKey);
 
-
     // If data is not in session storage, fetch it and cache it
     if (result === null || refresh) {
+        const requestOptions: RequestInit = {
+            method: "GET",
+            headers: headers,
+        };
         try {
-            const response = await fetch(dataURL);
+            const response = await fetch(dataURL, requestOptions);
             const data: T = await response.json();
             window.sessionStorage.setItem(cacheKey, JSON.stringify(data));
         } catch (err) {
