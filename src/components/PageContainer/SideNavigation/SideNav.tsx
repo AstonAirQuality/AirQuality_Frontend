@@ -56,7 +56,7 @@ const SideNav = (props: SideNavProps) => {
                     <Link to="/" className="flex items-center pl-2.5 mb-2">
                         <img src="/crest.png" className="mr-3 h-12 sm:h-14" alt="IoT logo" />
                         <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                            Aston Air Quality
+                            AU Air Quality
                         </span>
                     </Link>
 
@@ -93,12 +93,12 @@ const SideNav = (props: SideNavProps) => {
                                 setsideNavMenu={props.setsideNavMenu}
                             />
                         )}
-                        <SideNavMenuItem
+                        {/* <SideNavMenuItem
                             icon={<SiMapbox size={28} />}
                             text="Sensor Maps"
                             url="/sensor-mapping"
                             setsideNavMenu={props.setsideNavMenu}
-                        />
+                        /> */}
                         <SideNavMenuItem
                             icon={<BiExport size={28} />}
                             text="Export Data"

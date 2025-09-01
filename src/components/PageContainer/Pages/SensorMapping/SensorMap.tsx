@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, ChangeEvent } from 'react';
+import React, { useRef, useEffect, useState, ChangeEvent } from 'react';
 import mapboxgl, { Map } from 'mapbox-gl';
 import { GeolocateControl, NavigationControl } from 'mapbox-gl';
 import SelectDataForm from './SelectDataForm.tsx';
@@ -20,7 +20,7 @@ type Sensor = {
 
 type FeatureCollectionType = Record<string, any>; // Replace 'any' with your GeoJSON Feature type if available
 
-export default function SensorMap(): JSX.Element {
+export default function SensorMap(): React.JSX.Element {
   const [alertMessage, setAlertMessage] = useState<'' | [string, string] | string>('');
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<Map | null>(null);

@@ -12,6 +12,22 @@
         overflow-hidden;
     }
 
+    .home-card{
+        @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transform transition duration-300 hover:scale-105 hover:shadow-xl;
+    }
+
+    .home-card-title{
+        @apply text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200;
+    }
+
+    .home-card-content{
+        @apply text-gray-600 dark:text-gray-300;
+    }
+
+    .home-badge{
+        @apply inline-flex items-center px-4 py-2 rounded-full font-medium text-sm;
+    }
+
 }
 
   

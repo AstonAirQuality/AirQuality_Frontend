@@ -24,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ sideNavMenu, setsideNavMenu }) => {
       <button onClick={() => setsideNavMenu(!sideNavMenu)}>
         <GiHamburgerMenu size={32} className='burger-icon' />
       </button>
-      <Title text="Aston Air Quality Dashboard" />
+      <Title text="Aston University Air Quality Dashboard" />
       <ThemeIcon darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
       <UserMenu showLoginMenu={showLoginMenu} logout={logout} />
     </div>
